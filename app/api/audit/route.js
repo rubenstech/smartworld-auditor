@@ -45,7 +45,7 @@ export async function POST(req) {
         'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}` 
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: 'deepseek-flash',
         messages: [
           { role: 'system', content: instruccionFinal },
           { role: 'user', content: textoPoliza }
