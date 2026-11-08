@@ -1,69 +1,126 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
 
 export default function Home() {
+  const [file, setFile] = useState(null);
+  const [ramo, setRamo] = useState('incendio'); // Estado para el tipo de póliza
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [resultado, setResultado] = useState(null);
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleAudit = async () => {
+    if (!file) {
+      alert("Por favor, selecciona un archivo PDF primero.");
+      return;
+    }
+    setIsAuditing(true);
+    setResultado(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('ramo', ramo); // Enviamos el ramo elegido al backend
+
+    try {
+      const response = await fetch('/api/audit', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.exito) {
+        setResultado(data.auditoria);
+      } else {
+        alert("Hubo un error en la auditoría: " + data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error de conexión con el servidor.");
+    } finally {
+      setIsAuditing(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6">
+      
+      {/* Encabezado */}
+      <div className="text-center mb-8">
+        <h1 className="text-5xl font-bold text-blue-500 mb-4 tracking-tight">
+          SmartWorld <span className="text-white">Auditor</span>
+        </h1>
+        <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+          Plataforma de auditoría inteligente de pólizas de seguros. 
+          Sube tu documento y obtén un Resumen Ejecutivo y una Guía de Siniestro en segundos.
+        </p>
+      </div>
+
+      {/* Tarjeta Central de Carga */}
+      <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-xl text-center mb-8">
+        
+        {/* SELECTOR DE RAMO */}
+        <div className="mb-6 text-left">
+          <label className="block text-sm font-semibold text-slate-300 mb-2">
+            Selecciona el ramo de la póliza:
+          </label>
+          <select 
+            value={ramo} 
+            onChange={(e) => setRamo(e.target.value)}
+            className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 border border-slate-600 focus:outline-none focus:border-blue-500 transition-colors"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <option value="incendio">Incendio y Líneas Aliadas</option>
+            <option value="vehiculos">Vehículos (Autos)</option>
+            <option value="vida">Vida y Desgravamen</option>
+            <option value="salud">Salud / EPS</option>
+            <option value="rc">Responsabilidad Civil</option>
+            <option value="sctr">SCTR</option>
+          </select>
         </div>
-      </main>
-    </div>
+
+        <div className="mb-8">
+          <svg className="w-12 h-12 text-blue-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          
+          <input 
+            type="file" 
+            accept=".pdf" 
+            onChange={handleFileChange}
+            className="block w-full text-sm text-slate-400 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer transition-all"
+          />
+        </div>
+
+        <button 
+          onClick={handleAudit}
+          disabled={isAuditing}
+          className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
+            isAuditing ? 'bg-slate-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/30'
+          }`}
+        >
+          {isAuditing ? 'Auditando documento (esto puede tardar)...' : 'Iniciar Auditoría IA'}
+        </button>
+      </div>
+
+      {/* Área de Resultados */}
+      {resultado && (
+        <div className="w-full max-w-4xl bg-slate-800 p-8 rounded-2xl border border-green-500/50 shadow-2xl">
+          <h2 className="text-2xl font-bold text-green-400 mb-4 border-b border-slate-700 pb-2">Resultado de la Auditoría</h2>
+          <div className="text-slate-300 whitespace-pre-wrap font-mono text-sm">
+            {resultado}
+          </div>
+        </div>
+      )}
+
+      {/* Pie de página */}
+      <p className="mt-12 text-slate-500 text-sm">
+        © 2026 SmartWorld AI. Impulsado por DeepSeek & IP Blindada.
+      </p>
+    </main>
   );
 }
