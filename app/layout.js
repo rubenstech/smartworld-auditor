@@ -1,6 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
+  // 1. Añadimos metadataBase para que las URLs de la imagen sean absolutas
+  metadataBase: new URL('https://smartworld-auditor.vercel.app'),
   title: "SmartWorld Auditor | IA para Seguros",
   description: "Sube tu póliza y obtén un Resumen Ejecutivo y una Guía de Siniestro en segundos.",
   icons: {
@@ -13,6 +15,7 @@ export const metadata = {
     siteName: "SmartWorld AI",
     images: [
       {
+        // 2. La URL de la imagen puede ser relativa gracias a metadataBase
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
