@@ -80,6 +80,7 @@ export default function Home() {
             <option value="salud">Salud / EPS</option>
             <option value="rc">Responsabilidad Civil</option>
             <option value="sctr">SCTR</option>
+            <option value="otros">Otro Ramo / Análisis General</option>
           </select>
         </div>
 

@@ -29,7 +29,9 @@ export async function POST(req) {
       
       rc: `Actúa como un Auditor de Seguros de Responsabilidad Civil en Perú. Lee esta póliza y extrae: 1) El Límite Asegurado (¿es Único y Combinado?). 2) Exclusiones clave. 3) La base del deducible (¿monto fijo o porcentaje?). 4) Guía de Siniestro: ¿Quién designa a los abogados? ¿Qué plazo hay para notificar una demanda?`,
       
-      sctr: `Actúa como un Auditor de SCTR en Perú. Lee esta póliza y extrae: 1) La actividad de riesgo declarada. 2) Coberturas de Salud y Pensiones. 3) Porcentajes de IPP. 4) Guía de Siniestro: ¿Cómo se activa el SCTR ante un accidente laboral y qué rol juega SUNAFIL en las primeras 24 horas?`
+      sctr: `Actúa como un Auditor de SCTR en Perú. Lee esta póliza y extrae: 1) La actividad de riesgo declarada. 2) Coberturas de Salud y Pensiones. 3) Porcentajes de IPP. 4) Guía de Siniestro: ¿Cómo se activa el SCTR ante un accidente laboral y qué rol juega SUNAFIL en las primeras 24 horas?`,
+
+      otros: `Actúa como un Auditor de Seguros Senior en Perú. Lee este documento y genera un análisis integral. Extrae: 1) ¿Qué cubre realmente la póliza? 2) Las 5 exclusiones más importantes. 3) ¿Cómo funcionan los deducibles? 4) ¿Cuál es el procedimiento y los plazos en caso de siniestro? 5) Genera una Guía Express de qué hacer en caso de siniestro.`
     };
 
     // Seleccionamos el prompt según el ramo, o usamos incendio por defecto
