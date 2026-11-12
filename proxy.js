@@ -22,7 +22,6 @@ export default async function proxy(request) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Si no hay usuario y no está en las páginas públicas, redirigir al login
   if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
